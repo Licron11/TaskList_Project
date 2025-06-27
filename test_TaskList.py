@@ -4,20 +4,20 @@ import os
 from TaskList import TaskList
 
 
-#Фикстура для создания тестового списка задач
+# Фикстура для создания тестового списка задач
 @pytest.fixture
 def task_list(tmp_path):
     test_file = tmp_path / "test_tasks.json"
     return TaskList(filename=str(test_file))
 
 
-#Тест инициализиции, если файл отсутствует
+# Тест инициализиции, если файл отсутствует
 def test_init_if_no_file(task_list):
     assert task_list.tasks == []
     assert os.path.exists(task_list.filename) is False
 
 
-#Тест инициализации, если файл существует
+# Тест инициализации, если файл существует
 def test_init_with_file(tmp_path):
     test_file = tmp_path / "test_tasks.json"
     sample_task = [{"id": 1, "title": "Test", "done": False}]
@@ -26,7 +26,7 @@ def test_init_with_file(tmp_path):
     assert TaskList(filename=str(test_file)).tasks == sample_task
 
 
-#Тест добавления задач
+# Тест добавления задач
 def test_add_task(task_list):
     task1 = task_list.add_task("Task 1")
     assert task1 == {"id": 1, "title": "Task 1", "done": False}
@@ -37,7 +37,7 @@ def test_add_task(task_list):
     assert task_list.tasks == [task1, task2]
 
 
-#Тест отметки задач как выполненных
+# Тест отметки задач как выполненных
 def test_mark_done(task_list):
     task_list.add_task("Task 1")
     task_list.add_task("Task 2")
@@ -49,7 +49,7 @@ def test_mark_done(task_list):
     assert task_list.mark_done(999) is False
 
 
-#Тест получения всех задач
+# Тест получения всех задач
 def test_get_all_tasks(task_list):
     task_list.add_task("Task 1")
     task_list.add_task("Task 2")
@@ -58,7 +58,7 @@ def test_get_all_tasks(task_list):
     assert tasks[0]["title"] == "Task 1"
 
 
-#Тест получения только невыполенных задач
+# Тест получения только невыполенных задач
 def test_get_unfinished_tasks(task_list):
     task_list.add_task("Task 1")
     task_list.add_task("Task 2")
@@ -69,7 +69,7 @@ def test_get_unfinished_tasks(task_list):
     assert unfinished[0]["title"] == "Task 2"
 
 
-#Тест удаления задач
+# Тест удаления задач
 def test_delete_task(task_list):
     task_list.add_task("Task 1")
     task_list.add_task("Task 2")

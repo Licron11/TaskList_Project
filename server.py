@@ -5,12 +5,13 @@ from TaskList import TaskList
 
 
 class TaskListHandler(BaseHTTPRequestHandler):
-    #Инициализация обработчика с пустым списком задач
+    # Инициализация обработчика с пустым списком задач
     def __init__(self, *args, **kwargs):
         self.task_list = TaskList()
         super().__init__(*args, **kwargs)
 
-    #Отправка успешного HTTP-ответа
+
+    # Отправка успешного HTTP-ответа
     def _send_response(self, status_code, data=None):
         self.send_response(status_code)
         self.send_header('Content-type', 'application/json')
@@ -18,7 +19,8 @@ class TaskListHandler(BaseHTTPRequestHandler):
         if data is not None:
             self.wfile.write(json.dumps(data).encode('utf-8'))
 
-    #Отправка ошибок
+
+    # Отправка ошибок
     def _send_error(self, status_code, message):
         self.send_response(status_code)
         self.send_header('Content-type', 'application/json')
@@ -26,14 +28,16 @@ class TaskListHandler(BaseHTTPRequestHandler):
         error_response = {"error": message}
         self.wfile.write(json.dumps(error_response).encode('utf-8'))
 
-    #Извлечение ID задачи из URL
+
+    # Извлечение ID задачи из URL
     def _get_task_id_from_url(self):
         path_parts = self.path.split('/')
         if len(path_parts) < 3 or not path_parts[2].isdigit():
             return None
         return int(path_parts[2])
 
-    #Обработка GET запросов для получения задач
+
+    # Обработка GET запросов для получения задач
     def do_GET(self):
         parsed_url = urlparse(self.path)
         if parsed_url.path == '/tasks':
@@ -46,7 +50,8 @@ class TaskListHandler(BaseHTTPRequestHandler):
         else:
             self._send_error(404, "Эндпоинт не найден")
 
-    #Обработка POST запросов для добавления новых задач
+
+    # Обработка POST запросов для добавления новых задач
     def do_POST(self):
         if self.path == '/tasks':
             content_length = int(self.headers['Content-Length'])
@@ -68,7 +73,8 @@ class TaskListHandler(BaseHTTPRequestHandler):
         else:
             self._send_error(404, "Эндпоинт не найден")
 
-    #Обработка PATCH запросов для изменения статуса задачи на выполенный
+
+    # Обработка PATCH запросов для изменения статуса задачи на выполенный
     def do_PATCH(self):
         task_id = self._get_task_id_from_url()
         if not task_id:
@@ -103,7 +109,8 @@ class TaskListHandler(BaseHTTPRequestHandler):
         except Exception as e:
             self._send_error(500, f"Ошибка при обновлении задачи: {str(e)}")
 
-    #Обработка DELETE запросов для удаления задач
+
+    # Обработка DELETE запросов для удаления задач
     def do_DELETE(self):
         task_id = self._get_task_id_from_url()
         if not task_id:
@@ -121,7 +128,7 @@ class TaskListHandler(BaseHTTPRequestHandler):
             self._send_error(500, f"Ошибка при удалении задачи: {str(e)}")
 
 
-#Запуск сервера
+# Запуск сервера
 if __name__ == '__main__':
     host = '0.0.0.0'
     port = 8008
